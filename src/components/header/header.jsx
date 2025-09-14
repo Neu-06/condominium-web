@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import logo from "../../assets/logo-horizontal.svg";
-
+import logo from "../../assets/logo-horizontal.svg"
 function Header() {
   const [open, setOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-30 bg-white shadow-sm">
       <nav className="max-w-7xl mx-auto flex items-center justify-between px-4 py-2">
-        {/* Logo horizontal */}
+        {/* Logo */}
         <Link to="/" className="flex items-center gap-2 py-2">
           <img src={logo} alt="Condominium Smart Living" className="h-12 w-auto" />
         </Link>
@@ -16,9 +15,9 @@ function Header() {
         {/* Menú desktop */}
         <ul className="hidden lg:flex items-center gap-8 text-base font-medium">
           <ListItem to="/">Inicio</ListItem>
-          <ListItem to="/payment">Pagos</ListItem>
-          <ListItem to="/about">Acerca</ListItem>
-          <ListItem to="/blog">Blog</ListItem>
+          <ListItem to="/">Pagos</ListItem>
+          <ListItem to="/">Acerca</ListItem>
+          <ListItem to="/dashboard">Blog</ListItem>
         </ul>
 
         {/* Botones desktop */}
@@ -61,9 +60,9 @@ function Header() {
         <div className="lg:hidden bg-white border-t border-gray-200 shadow-md">
           <ul className="flex flex-col gap-2 px-4 py-4 text-base font-medium">
             <ListItem to="/">Inicio</ListItem>
-            <ListItem to="/payment">Pagos</ListItem>
-            <ListItem to="/about">Acerca</ListItem>
-            <ListItem to="/blog">Blog</ListItem>
+            <ListItem to="/">Pagos</ListItem>
+            <ListItem to="/">Acerca</ListItem>
+            <ListItem to="/">Blog</ListItem>
             {/* Botones de sesión en móvil */}
             <li className="mt-2 flex gap-2">
               <Link to="/login" className="flex-1 px-5 py-2 rounded-md border border-blue-600 text-blue-600 hover:bg-blue-50 font-semibold text-center">Iniciar sesión</Link>

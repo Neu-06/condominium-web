@@ -5,11 +5,10 @@ import { Link } from "react-router-dom";
 export default function Home() {
   return (
     <div className="min-h-[80vh] flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 via-white to-blue-100 px-4 relative overflow-hidden">
-      {/* Fondo decorativo */}
+      
       <span className="absolute top-0 left-0 w-40 h-40 bg-blue-200 rounded-full blur-2xl opacity-30 -z-10" />
       <span className="absolute bottom-0 right-0 w-56 h-56 bg-blue-300 rounded-full blur-3xl opacity-20 -z-10" />
 
-      {/* Imagen principal */}
       <img
         src={home_img}
         alt="Condominio inteligente"
