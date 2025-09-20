@@ -1,23 +1,12 @@
 import { getToken, clearAuth } from "./auth.js";
 
-// SOLO usar variables de entorno, sin fallbacks estáticos
-const API_BASE = import.meta.env.VITE_API_BASE;
-const isDevelopment = import.meta.env.DEV;
+// Hardcodear temporalmente para que funcione YA
+const API_BASE = "https://condominium-api-staging.up.railway.app";
 
-// Verificar que la variable esté configurada
-if (!API_BASE) {
-  console.error('❌ VITE_API_BASE no está configurada en .env');
-  console.error('📝 Crea un archivo .env con: VITE_API_BASE=tu-backend-url');
-}
-
-console.log('Entorno:', isDevelopment ? 'Desarrollo' : 'Producción');
-console.log('API_BASE desde .env:', API_BASE);
+console.log('Entorno:', import.meta.env.DEV ? 'Desarrollo' : 'Producción');
+console.log('API_BASE forzado:', API_BASE);
 
 export async function apiFetch(url, options = {}) {
-  if (!API_BASE) {
-    throw new Error('VITE_API_BASE no configurada. Revisa tu archivo .env');
-  }
-
   const token = getToken();
   const headers = {
     'Content-Type': 'application/json',
@@ -25,10 +14,16 @@ export async function apiFetch(url, options = {}) {
   };
   if (token) headers['Authorization'] = `Bearer ${token}`;
 
-  // Siempre usar URL completa desde .env
-  const fullUrl = url.startsWith('http') ? url : `${API_BASE}${url}`;
+  // FORZAR URL completa SIEMPRE
+  let fullUrl;
+  if (url.startsWith('http')) {
+    fullUrl = url;
+  } else {
+    // SIEMPRE construir URL completa
+    fullUrl = API_BASE + url;
+  }
   
-  console.log('Request a:', fullUrl);
+  console.log('Request FORZADO a:', fullUrl);
 
   const res = await fetch(fullUrl, { ...options, headers });
 
