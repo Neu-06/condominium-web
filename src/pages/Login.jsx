@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { setToken, setUser } from "../services/auth.js";
-import { api } from "../services/apiClient.js";
+import { api } from "../services/apiClient";
 
 export default function Login() {
   const [show, setShow] = useState(false);
-  const [correo, setCorreo] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -14,19 +16,22 @@ export default function Login() {
     return () => clearTimeout(t);
   }, []);
 
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
     setLoading(true);
     try {
-      const res = await fetch("/api/cuenta/token/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ correo, password })
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.detail || "Credenciales inválidas");
-      setToken(data.access);
+      console.log("🔐 Enviando login a /api/cuenta/token/");
+      const response = await api.post("/api/cuenta/token/", formData);
+      console.log("✅ Respuesta login:", response);
+      setToken(response.access);
 
       const perfil = await api.get("/api/cuenta/perfil/");
       setUser(perfil);
@@ -34,6 +39,7 @@ export default function Login() {
       window.location.href =
         rol === "ADMIN" || rol === "ADMINISTRADOR" ? "/dashboard" : "/";
     } catch (err) {
+      console.error("❌ Error login:", err);
       setError(err.message || "Error");
     } finally {
       setLoading(false);
@@ -51,32 +57,64 @@ export default function Login() {
           Iniciar sesión
         </h1>
         <form className="space-y-6" onSubmit={handleSubmit}>
-          <input
-            className="w-full border border-blue-200 rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg"
-            placeholder="Correo"
-            type="email"
-            required
-            value={correo}
-            onChange={(e) => setCorreo(e.target.value)}
-          />
-          <input
-            className="w-full border border-blue-200 rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg"
-            placeholder="Contraseña"
-            type="password"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-blue-600 text-white rounded-2xl px-4 py-3 font-semibold text-lg shadow hover:bg-blue-700 transition disabled:opacity-60"
-          >
-            {loading ? "Entrando..." : "Entrar"}
-          </button>
           {error && (
-            <div className="text-red-500 text-sm text-center">{error}</div>
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+              {error}
+            </div>
           )}
+          <div className="space-y-4">
+            <div>
+              <label
+                htmlFor="username"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Usuario
+              </label>
+              <input
+                id="username"
+                name="username"
+                type="text"
+                required
+                value={formData.username}
+                onChange={handleChange}
+                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                placeholder="Ingresa tu usuario"
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Contraseña
+              </label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                required
+                value={formData.password}
+                onChange={handleChange}
+                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                placeholder="Ingresa tu contraseña"
+              />
+            </div>
+          </div>
+
+          <div>
+            <button
+              type="submit"
+              disabled={loading}
+              className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white ${
+                loading
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              }`}
+            >
+              {loading ? "Iniciando sesión..." : "Iniciar Sesión"}
+            </button>
+          </div>
         </form>
       </div>
     </section>
