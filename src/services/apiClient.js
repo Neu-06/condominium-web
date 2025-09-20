@@ -1,6 +1,21 @@
-const API_BASE = "/api"; // relativo, el proxy en dev y Nginx en prod lo resuelven
 
 import { getToken, clearAuth } from "./auth.js";
+const isDevelopment = import.meta.env.DEV;
+
+const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:8000";
+
+function buildUrl(url){
+  if(isDevelopment && url.startsWith("/api")){
+    return url;
+  }
+  if(url.startsWith("/api")){
+    return `${API_BASE}${url}`;
+  }
+
+  return url;
+
+}
+
 
 export async function apiFetch(url, options={}){
   const token = getToken();
@@ -9,7 +24,11 @@ export async function apiFetch(url, options={}){
     ...(options.headers||{})
   };
   if(token) headers['Authorization'] = `Bearer ${token}`;
-  const res = await fetch(url, { ...options, headers });
+
+  const fullUrl = buildUrl(url);
+
+  const res = await fetch(fullUrl, { ...options, headers });
+
   let data = null;
   try { data = await res.json(); } catch {
     //
@@ -31,7 +50,3 @@ export const api = {
   patch:(u,b)=>apiFetch(u,{method:'PATCH',body:JSON.stringify(b)}),
   del:(u)=>apiFetch(u,{method:'DELETE'})
 };
-
-export function setToken(t){
-  localStorage.setItem('token', t);
-}
