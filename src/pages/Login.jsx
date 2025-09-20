@@ -20,7 +20,7 @@ export default function Login() {
     setLoading(true);
     try {
       console.log("🔐 Enviando login a /api/cuenta/token/");
-      console.log("📝 Datos enviados:", { correo, password });
+      console.log("📝 Datos enviados:", { correo, password }); // Debug
 
       const data = await api.post("/api/cuenta/token/", { correo, password });
       console.log("✅ Respuesta login:", data);
@@ -37,6 +37,7 @@ export default function Login() {
 
       setUser(perfil);
       const rol = (perfil.rol || "").toUpperCase();
+
       window.location.href =
         rol === "ADMIN" || rol === "ADMINISTRADOR" ? "/dashboard" : "/";
     } catch (err) {
