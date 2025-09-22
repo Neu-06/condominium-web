@@ -59,12 +59,12 @@ export default function PersonalPage(){
 
   const rows = list.map(p=>({
     id:p.id,
-    nombre:p.nombre,
-    apellido:p.apellido,
+    nombre_completo: `${p.nombre || ''} ${p.apellido || ''}`.trim() || '—',
     dni:p.dni,
     puesto:p.puesto,
-    estado:p.estado,
-    activo:p.activo
+    activo:p.activo,
+    salida:p.fecha_salida,
+    contratado:p.fecha_contratacion
   }));
 
   return (
@@ -86,17 +86,16 @@ export default function PersonalPage(){
         loading={loading}
         columns={[
           { key:'id', label:'ID', width:'60px', enableSort:true },
-          { key:'nombre', label:'Nombre', enableSort:true },
-            { key:'apellido', label:'Apellido', enableSort:true },
+          { key:'nombre_completo', label:'Nombre Completo', enableSort:true },
           { key:'dni', label:'DNI', enableSort:true },
           { key:'puesto', label:'Puesto' },
-          { key:'estado', label:'Estado',
-            render:r=> <span className={`px-2 py-0.5 rounded text-xs ${r.estado==='ACTIVO'?'bg-green-100 text-green-700':'bg-gray-200 text-gray-700'}`}>{r.estado}</span>
-          },
           { key:'activo', label:'Activo',
             render:r=> <span className={`px-2 py-0.5 rounded text-xs ${r.activo?'bg-green-100 text-green-700':'bg-red-100 text-red-600'}`}>{r.activo?'Sí':'No'}</span>,
             width:'80px'
-          }
+          },
+          { key:'contratado', label:'Contratado', render:r=>r.contratado || '—', width:'120px', hideBelow:'sm' },
+          { key:'salida', label:'Salida', render:r=>r.salida || '—', width:'120px', hideBelow:'sm' }
+
         ]}
         onCreate={onCreate}
         onEdit={onEdit}

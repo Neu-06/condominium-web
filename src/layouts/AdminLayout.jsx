@@ -9,6 +9,7 @@ const menu = [
 		opciones: [
 			{ nombre: "Cuentas", ruta: "/dashboard/usuarios" },
 			{ nombre: "Roles", ruta: "/dashboard/usuarios/roles" },
+			{ nombre: "Bitacora", ruta: "/dashboard/usuarios/bitacora" },
 		],
 	},
 	{
@@ -16,16 +17,27 @@ const menu = [
 		icono: "🏢",
 		opciones: [
 			{ nombre: "Residentes", ruta: "/dashboard/residentes" },
-			{ nombre: "Personal", ruta: "/dashboard/personal" },
+			{ nombre: "Residencias", ruta: "/dashboard/residencias" },
+			{ nombre: "Vehículos", ruta: "/dashboard/vehiculos" },
+			{ nombre: "Mascotas", ruta: "/dashboard/mascotas" },
+			{ nombre: "Visitantes", ruta: "/dashboard/visitantes" },
 		],
 	},
+
+	{grupo: "Personal",
+		icono: "👷", opciones: [
+			{ nombre: "Personal", ruta: "/dashboard/personal" },
+			{ nombre: "Tareas", ruta: "/dashboard/tareas" },
+		],
+	},
+
 	{
 		grupo: "Áreas y Servicios",
 		icono: "🛠️",
 		opciones: [
 			{ nombre: "Áreas Comunes", ruta: "/dashboard/areas" },
-			{ nombre: "Tareas", ruta: "/dashboard/tareas" },
 			{ nombre: "Reglas", ruta: "/dashboard/areas/reglas" },
+			{ nombre: "Horarios", ruta: "/dashboard/areas/horarios" },
 		],
 	},
 	{

@@ -220,7 +220,10 @@ function ResidenteForm({ initialData = null, onSubmit, onCancel, loading = false
                 <option value="">Selecciona</option>
                 <option value="PROPIETARIO">Propietario</option>
                 <option value="INQUILINO">Inquilino</option>
-                <option value="HABITANTE">Habitante</option>
+                <option value="FAMILIAR_PROPIETARIO">Familiar Propietario</option>
+                <option value="FAMILIAR_INQUILINO">Familiar Inquilino</option>
+                <option value="OTRO">Otro</option>
+
               </select>
             }
           />

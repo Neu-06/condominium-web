@@ -24,12 +24,12 @@ export default function SmartTable({
   onEdit,
   onDelete,
   actionsLabel = "Opciones",
-  actionsRender,                // (row) => JSX (si lo pasas reemplaza botones por defecto)
+  actionsRender,                
   showDeletedButton = false,
   deletedActive = false,
   onToggleDeleted,
   className = "",
-  compact = false               // filas más pequeñas
+  compact = false               
 }) {
   const [sortState, setSortState] = useState({ key: null, dir: null }); // dir: 'asc'|'desc'|null
 

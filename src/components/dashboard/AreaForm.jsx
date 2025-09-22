@@ -2,7 +2,18 @@ import { useEffect, useState } from "react";
 
 export default function AreaForm({ initialData=null, reglas=[], onSubmit, onCancel, loading=false }) {
   const editMode = !!initialData;
-  const [form,setForm]=useState({ nombre:"", descripcion:"", activo:true, reglasSeleccionadas:[] });
+  const [form,setForm]=useState({
+    nombre:"",
+    descripcion:"",
+    activo:true,
+    reglasSeleccionadas:[],
+    requiere_reserva:false,
+    capacidad_maxima:"",
+    costo_reserva:"",
+    tiempo_reserva_minima:"",
+    tiempo_reserva_maxima:"",
+    estado:"disponible"
+  });
   const [touched,setTouched]=useState({});
 
   useEffect(()=>{
@@ -11,10 +22,27 @@ export default function AreaForm({ initialData=null, reglas=[], onSubmit, onCanc
         nombre: initialData.nombre || "",
         descripcion: initialData.descripcion || "",
         activo: initialData.activo,
-        reglasSeleccionadas: (initialData.reglas || []).map(r=>r.id)
+        reglasSeleccionadas: (initialData.reglas || []).map(r=>r.id),
+        requiere_reserva: initialData.requiere_reserva ?? false,
+        capacidad_maxima: initialData.capacidad_maxima ?? "",
+        costo_reserva: initialData.costo_reserva ?? "",
+        tiempo_reserva_minima: initialData.tiempo_reserva_minima ?? "",
+        tiempo_reserva_maxima: initialData.tiempo_reserva_maxima ?? "",
+        estado: initialData.estado || "disponible"
       });
     } else {
-      setForm({ nombre:"", descripcion:"", activo:true, reglasSeleccionadas:[] });
+      setForm({
+        nombre:"",
+        descripcion:"",
+        activo:true,
+        reglasSeleccionadas:[],
+        requiere_reserva:false,
+        capacidad_maxima:"",
+        costo_reserva:"",
+        tiempo_reserva_minima:"",
+        tiempo_reserva_maxima:"",
+        estado:"disponible"
+      });
     }
   },[initialData]);
 
@@ -37,7 +65,13 @@ export default function AreaForm({ initialData=null, reglas=[], onSubmit, onCanc
     const payload = {
       nombre: form.nombre.trim(),
       descripcion: form.descripcion.trim(),
-      activo: form.activo
+      activo: form.activo,
+      requiere_reserva: form.requiere_reserva,
+      capacidad_maxima: form.capacidad_maxima ? parseInt(form.capacidad_maxima) : null,
+      costo_reserva: form.costo_reserva ? parseFloat(form.costo_reserva) : null,
+      tiempo_reserva_minima: form.tiempo_reserva_minima ? parseInt(form.tiempo_reserva_minima) : null,
+      tiempo_reserva_maxima: form.tiempo_reserva_maxima ? parseInt(form.tiempo_reserva_maxima) : null,
+      estado: form.estado
     };
     if(editMode) payload.id = initialData.id;
     onSubmit(payload, form.reglasSeleccionadas);
@@ -93,6 +127,69 @@ export default function AreaForm({ initialData=null, reglas=[], onSubmit, onCanc
                 </label>
               ))}
             </div>
+          </Field>
+          <Field label="Requiere reserva">
+            <div className="flex items-center gap-2 h-[46px] px-4 rounded-2xl border border-gray-300 bg-white">
+              <input type="checkbox" checked={form.requiere_reserva} onChange={e=>setForm(f=>({...f,requiere_reserva:e.target.checked}))} disabled={loading} className="w-4 h-4 accent-blue-600"/>
+              <span className="text-sm">{form.requiere_reserva? "Sí":"No"}</span>
+            </div>
+          </Field>
+          <Field label="Capacidad máxima">
+            <input
+              className="input-base"
+              type="number"
+              min="1"
+              value={form.capacidad_maxima}
+              onChange={e=>setForm(f=>({...f,capacidad_maxima:e.target.value}))}
+              disabled={loading}
+              placeholder="Ej: 50"
+            />
+          </Field>
+          <Field label="Costo reserva">
+            <input
+              className="input-base"
+              type="number"
+              min="0"
+              step="0.01"
+              value={form.costo_reserva}
+              onChange={e=>setForm(f=>({...f,costo_reserva:e.target.value}))}
+              disabled={loading}
+              placeholder="Ej: 100.00"
+            />
+          </Field>
+          <Field label="Tiempo reserva mínima (Hr)">
+            <input
+              className="input-base"
+              type="number"
+              min="0"
+              value={form.tiempo_reserva_minima}
+              onChange={e=>setForm(f=>({...f,tiempo_reserva_minima:e.target.value}))}
+              disabled={loading}
+              placeholder="Ej: 30"
+            />
+          </Field>
+          <Field label="Tiempo reserva máxima (Hr)">
+            <input
+              className="input-base"
+              type="number"
+              min="0"
+              value={form.tiempo_reserva_maxima}
+              onChange={e=>setForm(f=>({...f,tiempo_reserva_maxima:e.target.value}))}
+              disabled={loading}
+              placeholder="Ej: 120"
+            />
+          </Field>
+          <Field label="Estado">
+            <select
+              className="input-base"
+              value={form.estado}
+              onChange={e=>setForm(f=>({...f,estado:e.target.value}))}
+              disabled={loading}
+            >
+              <option value="disponible">Disponible</option>
+              <option value="mantenimiento">En Mantenimiento</option>
+              <option value="cerrado">Cerrado</option>
+            </select>
           </Field>
         </div>
       </form>

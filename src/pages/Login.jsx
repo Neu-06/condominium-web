@@ -8,6 +8,8 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [bloqueado, setBloqueado] = useState(false);
+  const [intentosRestantes, setIntentosRestantes] = useState(3);
 
   useEffect(() => {
     const t = setTimeout(() => setShow(true), 50);
@@ -18,10 +20,9 @@ export default function Login() {
     e.preventDefault();
     setError("");
     setLoading(true);
+    
     try {
       console.log("🔐 Enviando login a /api/cuenta/token/");
-      console.log("📝 Datos enviados:", { correo, password }); // Debug
-
       const data = await api.post("/api/cuenta/token/", { correo, password });
       console.log("✅ Respuesta login:", data);
 
@@ -30,20 +31,41 @@ export default function Login() {
       }
 
       setToken(data.access);
-
       console.log("👤 Obteniendo perfil del usuario...");
       const perfil = await api.get("/api/cuenta/perfil/");
-      console.log("✅ Perfil obtenido:", perfil);
-
       setUser(perfil);
+      
       const rol = (perfil.rol || "").toUpperCase();
-
-      window.location.href =
-        rol === "ADMIN" || rol === "ADMINISTRADOR" ? "/dashboard" : "/";
+      window.location.href = rol === "ADMIN" || rol === "ADMINISTRADOR" ? "/dashboard" : "/";
+      
     } catch (err) {
       console.error("❌ Error login:", err);
-      if (err.message.includes("401")) {
-        setError("Correo o contraseña incorrectos");
+      
+      if (err.status === 423) {
+        // Usuario bloqueado
+        setBloqueado(true);
+        if (err.data?.debe_recuperar) {
+          setError("Usuario bloqueado. Serás redirigido a recuperación de contraseña...");
+          setTimeout(() => {
+            window.location.href = "/recuperar-password";
+          }, 3000);
+        } else {
+          const minutos = err.data?.minutos_restantes || 30;
+          setError(`Usuario bloqueado por ${minutos} minutos. Intenta más tarde.`);
+        }
+      } else if (err.status === 401) {
+        const intentos = err.data?.intentos_restantes;
+        if (intentos !== undefined) {
+          setIntentosRestantes(intentos);
+          setError(`Credenciales incorrectas. Te quedan ${intentos} intentos.`);
+          if (intentos === 0) {
+            setTimeout(() => {
+              window.location.href = "/recuperar-password";
+            }, 2000);
+          }
+        } else {
+          setError("Correo o contraseña incorrectos");
+        }
       } else if (err.message.includes("404")) {
         setError("Servicio no disponible. Intenta más tarde.");
       } else {
@@ -64,6 +86,13 @@ export default function Login() {
         <h1 className="text-3xl font-bold text-blue-700 mb-6 text-center">
           Iniciar sesión
         </h1>
+        
+        {intentosRestantes < 3 && !bloqueado && (
+          <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-xl text-yellow-800 text-sm text-center">
+            ⚠️ Te quedan {intentosRestantes} intentos antes del bloqueo
+          </div>
+        )}
+        
         <form className="space-y-6" onSubmit={handleSubmit}>
           <input
             className="w-full border border-blue-200 rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg"
@@ -72,6 +101,7 @@ export default function Login() {
             required
             value={correo}
             onChange={(e) => setCorreo(e.target.value)}
+            disabled={loading || bloqueado}
           />
           <input
             className="w-full border border-blue-200 rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg"
@@ -80,16 +110,32 @@ export default function Login() {
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            disabled={loading || bloqueado}
           />
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || bloqueado}
             className="w-full bg-blue-600 text-white rounded-2xl px-4 py-3 font-semibold text-lg shadow hover:bg-blue-700 transition disabled:opacity-60"
           >
             {loading ? "Entrando..." : "Entrar"}
           </button>
+          
+          <div className="text-center">
+            <button
+              type="button"
+              onClick={() => window.location.href = "/recuperar-password"}
+              className="text-blue-600 hover:text-blue-700 text-sm font-medium underline"
+            >
+              ¿Olvidaste tu contraseña?
+            </button>
+          </div>
+          
           {error && (
-            <div className="text-red-500 text-sm text-center">{error}</div>
+            <div className={`text-sm text-center p-3 rounded-xl ${
+              bloqueado ? 'bg-red-50 text-red-600 border border-red-200' : 'text-red-500'
+            }`}>
+              {error}
+            </div>
           )}
         </form>
       </div>

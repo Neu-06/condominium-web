@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 export default function AccountForm({
   initialUser = null,
   roles = [],
+  residentes = [],
+  personal = [],
   onSubmit,
   onCancel,
   loading = false
@@ -15,6 +17,8 @@ export default function AccountForm({
     apellido: "",
     telefono: "",
     rol_id: "",
+    residente: "",
+    personal: "",
     is_active: true
   });
   const [touched, setTouched] = useState({});
@@ -28,6 +32,8 @@ export default function AccountForm({
         apellido: initialUser.apellido || "",
         telefono: initialUser.telefono || "",
         rol_id: initialUser.rol ? initialUser.rol.id : "",
+        residente: initialUser.residente || "",
+        personal: initialUser.personal || "",
         is_active: initialUser.is_active
       });
     } else {
@@ -38,6 +44,8 @@ export default function AccountForm({
         apellido: "",
         telefono: "",
         rol_id: "",
+        residente: "",
+        personal: "",
         is_active: true
       });
     }
@@ -56,6 +64,7 @@ export default function AccountForm({
       apellido: true
     });
     if (!form.correo || (!editMode && !form.password) || !form.nombre || !form.apellido) return;
+    
     const payload = {
       id: initialUser?.id,
       correo: form.correo.trim(),
@@ -64,6 +73,8 @@ export default function AccountForm({
       apellido: form.apellido.trim(),
       telefono: form.telefono.trim(),
       rol_id: form.rol_id || null,
+      residente: form.residente || null,
+      personal: form.personal || null,
       is_active: form.is_active
     };
     if (editMode && !payload.password) delete payload.password;
@@ -194,6 +205,51 @@ export default function AccountForm({
               </select>
             }
           />
+
+          <Field
+            label="Residente"
+            children={
+              <select
+                value={form.residente}
+                onChange={e => {
+                  setField("residente", e.target.value);
+                  if (e.target.value) setField("personal", ""); // Limpiar personal si selecciona residente
+                }}
+                disabled={loading}
+                className="input-base"
+              >
+                <option value="">(Sin residente)</option>
+                {residentes.map(r => (
+                  <option key={r.id} value={r.id}>
+                    {r.nombre} {r.apellidos} - Residencia {r.residencia}
+                  </option>
+                ))}
+              </select>
+            }
+          />
+
+          <Field
+            label="Personal"
+            children={
+              <select
+                value={form.personal}
+                onChange={e => {
+                  setField("personal", e.target.value);
+                  if (e.target.value) setField("residente", ""); // Limpiar residente si selecciona personal
+                }}
+                disabled={loading}
+                className="input-base"
+              >
+                <option value="">(Sin personal)</option>
+                {personal.map(p => (
+                  <option key={p.id} value={p.id}>
+                    {p.nombre} - {p.cargo}
+                  </option>
+                ))}
+              </select>
+            }
+          />
+
           <Field
             label="Activo"
             children={
@@ -211,6 +267,11 @@ export default function AccountForm({
               </div>
             }
           />
+        </div>
+
+        {/* Nota informativa */}
+        <div className="text-xs text-gray-500 bg-gray-50 p-3 rounded-lg">
+          <strong>Nota:</strong> Solo puedes asignar una cuenta a un residente O a personal, no a ambos.
         </div>
       </form>
     </div>

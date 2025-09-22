@@ -8,6 +8,8 @@ export default function CuentasPage() {
   const [loading, setLoading] = useState(false);
   const [usuarios, setUsuarios] = useState([]);
   const [roles, setRoles] = useState([]);
+  const [residentes, setResidentes] = useState([]);
+  const [personal, setPersonal] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
   const [deleteUser, setDeleteUser] = useState(null);
@@ -18,11 +20,15 @@ export default function CuentasPage() {
     setError("");
     Promise.all([
       api.get("/api/cuenta/usuarios/"),
-      api.get("/api/cuenta/roles/")
+      api.get("/api/cuenta/roles/"),
+      api.get("/api/residentes/"),
+      api.get("/api/personal/")
     ])
-      .then(([u, r]) => {
+      .then(([u, r, res, per]) => {
         setUsuarios(Array.isArray(u) ? u : []);
         setRoles(Array.isArray(r) ? r : []);
+        setResidentes(Array.isArray(res) ? res : []);
+        setPersonal(Array.isArray(per) ? per : []);
       })
       .catch(e => setError(e.message))
       .finally(() => setLoading(false));
@@ -84,25 +90,22 @@ export default function CuentasPage() {
   const rows = usuarios.map(u => ({
     id: u.id,
     correo: u.correo,
-    nombre: u.nombre,
+    nombre_completo: `${u.nombre || ''} ${u.apellido || ''}`.trim() || '—',
     activo: u.is_active,
-    last_login: u.last_login,
+    propietario: u.personal ? `Personal: ${u.personal.nombre}` : 
+                 u.residente ? `Residente: ${u.residente.nombre}` : '—',
     rol: u.rol ? u.rol.nombre : "—"
   }));
 
-  function formatDate(dt) {
-    if (!dt) return "—";
-    const d = new Date(dt);
-    if (isNaN(d.getTime())) return dt;
-    return d.toLocaleDateString() + " " + d.toLocaleTimeString().slice(0, 5);
-  }
 
   return (
     <div className="space-y-8">
       {showForm && (
         <AccountForm
           initialUser={editing}
-            roles={roles}
+          roles={roles}
+          residentes={residentes}
+          personal={personal}
           onSubmit={saveUser}
           onCancel={() => { setShowForm(false); setEditing(null); }}
           loading={loading}
@@ -121,15 +124,10 @@ export default function CuentasPage() {
         loading={loading}
         columns={[
           { key: "id", label: "ID", width: "70px", enableSort: true },
-          { key: "nombre", label: "Nombre", enableSort: true },
+          { key: "nombre_completo", label: "Nombre Completo", enableSort: true },
           { key: "correo", label: "Correo", enableSort: true },
+          { key: "propietario", label: "Propietario", enableSort: true },
           { key: "rol", label: "Rol", hideBelow: "md" },
-          {
-            key: "last_login",
-            label: "Último Acceso",
-            render: (r, v) => <span className="text-xs">{formatDate(v)}</span>,
-            hideBelow: "sm"
-          },
           {
             key: "activo",
             label: "Estado",

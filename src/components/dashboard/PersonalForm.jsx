@@ -94,12 +94,13 @@ export default function PersonalForm({ initialData=null, onSubmit, onCancel, loa
             <input type="date" className="input-base" value={form.fecha_contratacion} onChange={e=>setField('fecha_contratacion',e.target.value)} disabled={loading}/>
           </Field>
           <Field label="Puesto">
-            <input className="input-base" value={form.puesto} onChange={e=>setField('puesto',e.target.value)} disabled={loading}/>
-          </Field>
-          <Field label="Estado">
-            <select className="input-base" value={form.estado} onChange={e=>setField('estado',e.target.value)} disabled={loading}>
-              <option value="ACTIVO">ACTIVO</option>
-              <option value="INACTIVO">INACTIVO</option>
+            <select className="input-base" value={form.puesto} onChange={e=>setField('puesto',e.target.value)} disabled={loading}>
+              <option value="ADMINISTRADOR">ADMINISTRADOR</option>
+              <option value="SUPERVISOR">SUPERVISOR</option>
+              <option value="MANTENIMIENTO">MANTENIMIENTO</option>
+              <option value="SEGURIDAD">SEGURIDAD</option>
+              <option value="LIMPIEZA">LIMPIEZA</option>
+              <option value="OTRO">OTRO</option>
             </select>
           </Field>
           <Field label="Fecha Salida">

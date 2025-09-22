@@ -68,6 +68,7 @@ export default function ReglasPage(){
     id:r.id,
     nombre:r.nombre,
     activo:r.activo,
+    descripcion:r.descripcion,
     asignadas:(r.areas_ids?.length) || 0
   }));
 
@@ -92,6 +93,7 @@ export default function ReglasPage(){
         columns={[
           { key:'id', label:'ID', width:'60px', enableSort:true },
           { key:'nombre', label:'Nombre', enableSort:true },
+          { key:'descripcion', label:'Descripción', hideBelow:'md' },
           { key:'asignadas', label:'Áreas', width:'90px' },
           { key:'activo', label:'Estado',
             render:r=> <span className={`px-2 py-0.5 rounded text-xs ${r.activo?'bg-green-100 text-green-700':'bg-red-100 text-red-600'}`}>{r.activo?'Activa':'Inactiva'}</span>,
