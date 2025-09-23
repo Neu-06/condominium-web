@@ -3,7 +3,6 @@ import { getToken, clearAuth } from "./auth.js";
 // Configuración simple y directa
 const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:8000";
 
-console.log('🌐 API_BASE:', API_BASE);
 
 export async function apiFetch(url, options = {}) {
   const token = getToken();
@@ -27,7 +26,6 @@ export async function apiFetch(url, options = {}) {
     fullUrl = url.startsWith('http') ? url : `${API_BASE}${url}`;
   }
   
-  console.log('📡 Request a:', fullUrl);
 
   const res = await fetch(fullUrl, { ...options, headers });
 
