@@ -48,11 +48,6 @@ const menu = [
 			{ nombre: "Reportes", ruta: "/dashboard/reportes" },
 		],
 	},
-	{
-		grupo: "Configuración",
-		icono: "⚙️",
-		opciones: [{ nombre: "General", ruta: "/dashboard/configuracion" }],
-	},
 ];
 
 export default function AdminLayout() {

@@ -8,38 +8,39 @@ export default function RolesPage() {
   const [loading, setLoading] = useState(false);
   const [roles, setRoles] = useState([]);
   const [error, setError] = useState("");
-   const [deleteUser, setDeleteUser] = useState(null);
+  const [deleteRol, setDeleteRol] = useState(null);
   const navigate = useNavigate();
 
   function cargar() {
     setLoading(true);
     setError("");
-    api.get("/api/cuenta/roles/")
-      .then(data => setRoles(Array.isArray(data) ? data : []))
-      .catch(e => setError(e.message))
+    api
+      .get("/api/cuenta/roles/")
+      .then((data) => setRoles(Array.isArray(data) ? data : []))
+      .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
   }
 
-  useEffect(() => { cargar(); }, []);
+  useEffect(() => {
+    cargar();
+  }, []);
+
+  function onDelete(row) {
+    const rol = roles.find((r) => r.id === row.id);
+    if (!rol) return;
+    setDeleteRol(rol);
+  }
 
   function confirmDelete() {
-    if (!deleteUser) return;
+    if (!deleteRol) return;
     setLoading(true);
-    api.del(`/api/cuenta/usuarios/${deleteUser.id}/`)
+    api
+      .del(`/api/cuenta/roles/${deleteRol.id}/`)
       .then(() => {
-        setDeleteUser(null);
+        setDeleteRol(null);
         cargar();
       })
-      .catch(e => setError(e.message))
-      .finally(() => setLoading(false));
-  }
-
-  function eliminar(row) {
-    if (!confirm(`Eliminar rol "${row.nombre}"?`)) return;
-    setLoading(true);
-    api.del(`/api/cuenta/roles/${row.id}/`)
-      .then(() => cargar())
-      .catch(e => setError(e.message))
+      .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
   }
 
@@ -56,24 +57,23 @@ export default function RolesPage() {
         loading={loading}
         columns={[
           { key: "id", label: "ID", width: "70px", enableSort: true },
-          { key: "nombre", label: "Nombre", enableSort: true }
+          { key: "nombre", label: "Nombre", enableSort: true },
         ]}
         onCreate={() => navigate("/dashboard/usuarios/roles/nuevo")}
         onEdit={(row) => navigate(`/dashboard/usuarios/roles/${row.id}/editar`)}
-        onDelete={eliminar}
+        onDelete={onDelete}
       />
 
-         <ConfirmDialog
-        open={!!deleteUser}
-        title="Eliminar Usuario"
-        message={`¿Seguro que deseas eliminar "${deleteUser?.correo}"? Esta acción no se puede deshacer.`}
+      <ConfirmDialog
+        open={!!deleteRol}
+        title="Eliminar Rol"
+        message={`¿Seguro que deseas eliminar "${deleteRol?.nombre}"? Esta acción no se puede deshacer.`}
         confirmText="Eliminar"
         cancelText="Cancelar"
         loading={loading}
         onConfirm={confirmDelete}
-        onCancel={() => setDeleteUser(null)}
+        onCancel={() => setDeleteRol(null)}
       />
-
     </div>
   );
 }
