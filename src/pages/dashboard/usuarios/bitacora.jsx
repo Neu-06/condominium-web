@@ -38,7 +38,7 @@ export default function BitacoraPage() {
       )}
 
       <SmartTable
-        titulo="Personal"
+        titulo="Bitacora"
         data={rows}
         loading={loading}
         columns={[

@@ -27,6 +27,7 @@ import VehiculosPage from "../pages/dashboard/residentes/vehiculos.jsx";
 import VisitantesPage from "../pages/dashboard/residentes/visitantes.jsx";
 import ResidenciasPage from "../pages/dashboard/residentes/residencias.jsx";
 import HorariosPage from "../pages/dashboard/areas/horarios.jsx";
+import AvisosPage from "../pages/dashboard/usuarios/avisos.jsx";
 
 import ErrorBoundaryPage from "../pages/ErrorBoundaryPage.jsx";
 import ProtectedRoute from "../components/routing/ProtectedRoute.jsx";
@@ -66,7 +67,8 @@ const router = createBrowserRouter([
       { path: "vehiculos", element: <VehiculosPage /> },
       { path: "visitantes", element: <VisitantesPage /> },
       { path: "residencias", element: <ResidenciasPage /> },
-      { path: "areas/horarios", element: <HorariosPage /> }
+      { path: "areas/horarios", element: <HorariosPage /> },
+      { path: "avisos", element: <AvisosPage /> },
     ]
   },
   {

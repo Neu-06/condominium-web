@@ -31,7 +31,8 @@ export async function apiFetch(url, options = {}) {
 
   let data = null;
   try {
-    data = await res.json();
+    const text = await res.text();
+    data = text ? JSON.parse(text) : null;
   } catch (e) {
     console.error('❌ Error parsing JSON:', e);
   }

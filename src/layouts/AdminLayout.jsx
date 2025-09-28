@@ -4,12 +4,13 @@ import { clearAuth, getUser } from "../services/auth.js";
 
 const menu = [
 	{
-		grupo: "Accesos",
+		grupo: "Acceso y Seguridad",
 		icono: "🔑",
 		opciones: [
 			{ nombre: "Cuentas", ruta: "/dashboard/usuarios" },
 			{ nombre: "Roles", ruta: "/dashboard/usuarios/roles" },
 			{ nombre: "Bitacora", ruta: "/dashboard/usuarios/bitacora" },
+			{ nombre: "Avisos", ruta: "/dashboard/avisos" },
 		],
 	},
 	{
