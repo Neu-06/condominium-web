@@ -28,6 +28,10 @@ import VisitantesPage from "../pages/dashboard/residentes/visitantes.jsx";
 import ResidenciasPage from "../pages/dashboard/residentes/residencias.jsx";
 import HorariosPage from "../pages/dashboard/areas/horarios.jsx";
 import AvisosPage from "../pages/dashboard/usuarios/avisos.jsx";
+import PagosPage from "../pages/dashboard/reserva_pagos/pagos.jsx";
+import FacturasPage from "../pages/dashboard/reserva_pagos/facturas.jsx";
+import ConceptoPagoPage from "../pages/dashboard/reserva_pagos/conceptosPago.jsx";
+import ReservasPage from "../pages/dashboard/reserva_pagos/reservas.jsx";
 
 import ErrorBoundaryPage from "../pages/ErrorBoundaryPage.jsx";
 import ProtectedRoute from "../components/routing/ProtectedRoute.jsx";
@@ -69,6 +73,10 @@ const router = createBrowserRouter([
       { path: "residencias", element: <ResidenciasPage /> },
       { path: "areas/horarios", element: <HorariosPage /> },
       { path: "avisos", element: <AvisosPage /> },
+      { path: "reservas", element: <ReservasPage /> },
+      { path: "pagos", element: <PagosPage /> },
+      { path: "facturas", element: <FacturasPage /> },
+      { path: "conceptos-pago", element: <ConceptoPagoPage /> },
     ]
   },
   {

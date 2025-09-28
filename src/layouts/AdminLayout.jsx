@@ -33,7 +33,7 @@ const menu = [
 	},
 
 	{
-		grupo: "Áreas y Servicios",
+		grupo: "Áreas Comunes",
 		icono: "🛠️",
 		opciones: [
 			{ nombre: "Áreas Comunes", ruta: "/dashboard/areas" },
@@ -42,11 +42,13 @@ const menu = [
 		],
 	},
 	{
-		grupo: "Finanzas",
+		grupo: "Reservas y Pagos",
 		icono: "💳",
 		opciones: [
 			{ nombre: "Pagos", ruta: "/dashboard/pagos" },
-			{ nombre: "Reportes", ruta: "/dashboard/reportes" },
+			{ nombre: "Facturas", ruta: "/dashboard/facturas" },
+			{ nombre: "Concepto Pago", ruta: "/dashboard/conceptos-pago" },
+			{ nombre: "Reservas", ruta: "/dashboard/reservas" },
 		],
 	},
 ];
